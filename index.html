@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Meter</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffe0fd;
+            font-family: Arial, sans-serif;
+            padding: 15px;
+        }
+
+        .phone {
+            width: min(88vw, 380px);
+            height: min(86dvh, 560px);
+            min-height: 0;
+            max-height: 86dvh;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px #0005;
+            position: relative;
+            background: #ffffff;
+        }
+
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px 25px;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            color: #ff4081;
+            margin-top: -40px;
+        }
+
+        #question {
+            max-width: 95%;
+            margin: 0 0 5px;
+            line-height: 1.35;
+        }
+
+        .gif {
+            width: 230px;
+            height: 230px;
+            max-width: 70vw;
+            max-height: 34vh;
+            object-fit: cover;
+            border-radius: 25px;
+            margin: 12px;
+            transform: translateY(-10px);
+        }
+
+        button {
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform .3s, opacity .3s;
+            touch-action: manipulation;
+        }
+
+        button:active {
+            transform: scale(.85);
+        }
+
+        #startButton {
+            background: #ff83c5;
+            color: white;
+        }
+
+        #yes {
+            background: #00c23aa2;
+            color: white;
+        }
+
+        #no {
+            background: #ff0000;
+            color: white;
+            position: relative;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            min-height: 80px;
+            width: 100%;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 40px;
+            pointer-events: none;
+            animation: heart 2s forwards;
+            z-index: 9999;
+        }
+
+        @keyframes heart {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-400px);
+                opacity: 0;
+            }
+        }
+
+        #noteInput {
+            width: 90%;
+            height: 140px;
+            border-radius: 20px;
+            border: 2px solid #ff83c5;
+            padding: 15px;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            font-family: Arial, sans-serif;
+        }
+
+        #sendNote {
+            margin-top: 20px;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            background: #ff4081;
+            color: white;
+            font-size: 20px;
+        }
+
+        #sendNote:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        #heartAnimation {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 120px;
+            z-index: 10000;
+            animation: heartShow 1.5s;
+        }
+
+        @keyframes heartShow {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        #status {
+            min-height: 22px;
+            margin-top: 10px;
+            color: #ff4081;
+            font-size: 14px;
+        }
+
+        @media (max-width: 430px) {
+            body {
+                padding: 0;
+            }
+
+            .phone {
+                width: 92%;
+                height: 620px;
+                min-height: 0;
+                border-radius: 30px;
+            }
+
+            .gif {
+                width: 190px;
+                height: 190px;
+                max-height: 30vh;
+            }
+
+            button {
+                padding: 13px 28px;
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 600px) {
+
+            html,
+            body {
+                width: 100%;
+                min-height: 100%;
+            }
+
+            body {
+                min-height: 100dvh;
+                padding: 10px;
+                overflow: hidden;
+            }
+
+            .phone {
+                width: min(100%, 430px);
+                height: calc(100dvh - 20px);
+                min-height: 0;
+                max-height: calc(100dvh - 20px);
+                border-radius: 30px;
+            }
+
+            .screen {
+                min-height: 0;
+                height: 100%;
+                padding: 16px 18px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            h1 {
+                margin-top: -10px;
+                font-size: clamp(26px, 8vw, 34px);
+            }
+
+            h2 {
+                font-size: clamp(20px, 6vw, 28px);
+            }
+
+            #question {
+                font-size: clamp(18px, 5vw, 23px);
+                max-width: 100%;
+            }
+
+            .gif {
+                width: min(190px, 55vw);
+                height: min(190px, 55vw);
+                max-width: 55vw;
+                max-height: 30dvh;
+                margin: 8px;
+            }
+
+            .buttons {
+                gap: 12px;
+                min-height: 70px;
+                flex-wrap: wrap;
+            }
+
+            button {
+                min-height: 50px;
+                padding: 12px 24px;
+                font-size: 18px;
+            }
+
+            #noteInput {
+                width: 100%;
+                height: min(140px, 25dvh);
+                font-size: 16px;
+            }
+
+            #sendNote {
+                margin-top: 14px;
+                width: auto;
+            }
+
+            #heartAnimation {
+                font-size: clamp(80px, 25vw, 120px);
+            }
+        }
+
+        @media (max-height: 700px) and (max-width: 600px) {
+            .screen {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            h1 {
+                font-size: clamp(24px, 7vw, 30px);
+            }
+
+            .gif {
+                width: min(160px, 45vw);
+                height: min(160px, 45vw);
+                max-height: 24dvh;
+            }
+
+            .buttons {
+                min-height: 60px;
+            }
+
+            button {
+                min-height: 46px;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Prevent the Yes/No button animations from creating page scroll */
+        #game {
+            overflow: hidden !important;
+        }
+
+        #game .buttons {
+            overflow: visible;
+        }
+
+        #game #yes,
+        #game #no {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone">
+
+        <!-- صفحه شروع -->
+        <div class="screen" id="start">
+            <h1>Love Meter ❤️</h1>
+            <p>Ready?</p>
+            <button id="startButton">START</button>
+        </div>
+
+        <!-- سوال ها -->
+        <div class="screen hidden" id="game">
+            <h2 id="question"></h2>
+            <img id="gif" class="gif" alt="cute animation">
+
+            <div class="buttons">
+                <button id="yes">Yes</button>
+                <button id="no">No</button>
+            </div>
+        </div>
+
+        <!-- یادداشت قبل از نمره -->
+        <div class="screen hidden" id="notePage">
+            <h1>One last thing 💌</h1>
+            <p>Before seeing your score, write something for me ❤️</p>
+
+            <textarea id="noteInput" placeholder="Write your message here..."></textarea>
+
+            <button id="sendNote" disabled>Send ❤️</button>
+            <div id="status"></div>
+        </div>
+
+        <!-- انیمیشن قلب -->
+        <div id="heartAnimation">❤️</div>
+
+        <!-- صفحه نمره -->
+        <div class="screen hidden" id="scorePage">
+            <h1>
+                Good Boy <br>
+                Your Score:
+            </h1>
+
+            <h2 id="finalScore">20/20</h2>
+
+            <div style="font-size:90px">⭐</div>
+        </div>
+
+        <!-- پایان -->
+        <div class="screen hidden" id="end">
+            <h1>🎉 Finished</h1>
+            <h2>Good Job Daddy ❤️</h2>
+            <div style="font-size:90px">💖</div>
+        </div>
+    </div>
+
+    <audio id="music" loop>
+        <source src="cuteemusic.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Firebase + برنامه در یک module واحد -->
+    <script type="module">
+        // ==========================
+        // سوال ها
+        // ==========================
+        const questions = [
+            {
+                text: "Hey daddy, Are U ready to prove your Love? ❤️",
+                image: "images/gif1.gif",
+                yesText: "Yes",
+                noText: "No"
+            },
+            {
+                text: "If I ask U, will U kill yourself for me?",
+                image: "images/gif2.gif",
+                yesText: "Yes",
+                noText: "No"
+            },
+            {
+                text: "Ready for next step? 💕",
+                image: "images/gif3.gif",
+                yesText: "Yes",
+                noText: "No"
+            },
+            {
+                text: "If U don't want me, I'll be like this, Do you like seeing me cry?",
+                image: "images/gif4.gif",
+                yesText: "Yes",
+                noText: "No",
+                trickNo: true
+            },
+            {
+                text: "I kenw it HAHAAA",
+                image: "images/gif3.gif",
+                yesText: "Ok",
+                noText: "No"
+            },
+            {
+                text: "I wanna tell U a secret!",
+                image: "images/gif6.gif",
+                yesText: "Ok",
+                noText: "No"
+            },
+            {
+                text: "If someone’s next to you, push them away.",
+                image: "images/gif7.gif",
+                yesText: "I did",
+                noText: "I can't"
+            },
+            {
+                text: "Now it's the TIME! 💘",
+                image: "images/gif22.gif",
+                yesText: "Go",
+                noText: "No"
+            },
+            {
+                text: "Come closer to understand.",
+                image: "images/gif19.gif",
+                yesText: "Ok",
+                noText: "No"
+            },
+            {
+                text: "Everytime I think about you sth happens with my pussy",
+                image: "images/gif8.gif",
+                yesText: "What?",
+                noText: "Aha"
+            },
+            {
+                text: "It gets sooo wet🥺",
+                image: "images/gif15.gif",
+                yesText: "Ok",
+                noText: "Aha"
+            },
+            {
+                text: "And I won't be happy again If you dont Fuck me🥺",
+                image: "images/gif17.gif",
+                yesText: "Wow",
+                noText: "Aha"
+            },
+            {
+                text: "Fuck me Daddy pleeease🥺",
+                image: "images/gif12.gif",
+                yesText: "My Pleasure",
+                noText: "No"
+            },
+            {
+                text: "When you show Ur Dick, U'll see me like this:",
+                image: "images/gif20.gif",
+                yesText: "Love it",
+                noText: "I don't"
+            },
+            {
+                text: "And I know when you think about my pussy, Ur face is like:",
+                image: "images/gif21.gif",
+                yesText: "Exactly",
+                noText: "No"
+            },
+            {
+                text: "So I think you get it how much U are obssesd with ma Pussy, dont U?",
+                image: "images/gif23.gif",
+                yesText: "Yes",
+                noText: "No"
+            },
+            {
+                text: "Behind all of this, I truly love you ma rough Daddy🥺💕",
+                image: "images/gif16.gif",
+                yesText: "Me more",
+                noText: "No"
+            },
+            {
+                text: "And I know U love me even more😌",
+                image: "images/gif13.gif",
+                yesText: "Of course",
+                noText: "No"
+            },
+            {
+                text: "So you have to promise me U won't leave me never ever, ok? and I do it too🥺",
+                image: "images/gif10.gif",
+                yesText: "I promise",
+                noText: "No"
+            },
+            {
+                text: "You seccsessfully passed Ur exam good boy, Ur score: 20/20💘",
+                image: "images/gif9.gif",
+                yesText: "God bless",
+                noText: "Aha"
+            }
+        ];
+
+        // ==========================
+        // عناصر صفحه
+        // ==========================
+        const start = document.getElementById("start");
+        const startButton = document.getElementById("startButton");
+        const game = document.getElementById("game");
+        const notePage = document.getElementById("notePage");
+        const scorePage = document.getElementById("scorePage");
+        const question = document.getElementById("question");
+        const gif = document.getElementById("gif");
+        const yes = document.getElementById("yes");
+        const no = document.getElementById("no");
+        const noteInput = document.getElementById("noteInput");
+        const sendNote = document.getElementById("sendNote");
+        const heartAnimation = document.getElementById("heartAnimation");
+        const status = document.getElementById("status");
+        const music = document.getElementById("music");
+
+        let index = 0;
+        let yesEscape = false;
+        let yesSize = 1;
+        let noSize = 1;
+
+        function resetButtons() {
+            yesSize = 1;
+            noSize = 1;
+
+            yes.style.transform = "scale(1)";
+            no.style.transform = "scale(1)";
+
+            yes.style.left = "0px";
+            yes.style.top = "0px";
+            no.style.left = "0px";
+            no.style.top = "0px";
+
+            yes.style.display = "block";
+            no.style.display = "block";
+        }
+
+        function showQuestion() {
+            if (index >= questions.length - 1) {
+                game.classList.add("hidden");
+                notePage.classList.remove("hidden");
+                return;
+            }
+
+            resetButtons();
+
+            const current = questions[index];
+
+            question.textContent = current.text;
+            gif.src = current.image;
+            yes.textContent = current.yesText;
+            no.textContent = current.noText;
+            yesEscape = current.trickNo === true;
+        }
+
+        function startGame() {
+            start.classList.add("hidden");
+            game.classList.remove("hidden");
+            showQuestion();
+
+            music.currentTime = 0;
+            music.play().catch(() => {
+                // بعضی مرورگرها صدا را محدود می‌کنند؛ خود بازی همچنان کار می‌کند.
+            });
+        }
+
+        function hearts() {
+            for (let i = 0; i < 8; i++) {
+                const h = document.createElement("div");
+                h.className = "heart";
+                h.textContent = "❤️";
+                h.style.left = Math.random() * window.innerWidth + "px";
+                h.style.top = window.innerHeight - 50 + "px";
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 2000);
+            }
+        }
+
+        function nextQuestion() {
+            hearts();
+            index++;
+
+            if (index >= questions.length - 1) {
+                game.classList.add("hidden");
+                notePage.classList.remove("hidden");
+                return;
+            }
+
+            showQuestion();
+        }
+
+        // ==========================
+        // START
+        // ==========================
+        startButton.addEventListener("click", startGame);
+
+        // ==========================
+        // YES
+        // ==========================
+        yes.addEventListener("click", function () {
+
+            if (yesEscape) {
+
+                yesSize -= 0.15;
+
+                yes.style.transform =
+                    ` scale(${Math.max(yesSize, 0)})`;
+
+                yes.style.position = "relative";
+
+                yes.style.left =
+                    (Math.random() * 200 - 100) + "px";
+
+                yes.style.top =
+                    (Math.random() * 150 - 75) + "px";
+
+
+                noSize += 0.25;
+
+                no.style.transform =
+                    `scale(${noSize})`;
+
+
+                if (yesSize <= 0.15) {
+                    yes.style.display = "none";
+                }
+
+                return;
+            }
+
+
+            // اول برو سوال بعدی
+            nextQuestion();
+
+
+
+        });
+
+        // ==========================
+        // NO
+        // ==========================
+        no.addEventListener("click", async function () {
+            if (yesEscape) {
+
+                nextQuestion();
+
+
+                return;
+            }
+
+            yesSize += 0.25;
+            noSize -= 0.15;
+
+            yes.style.transform = `scale(${yesSize})`;
+            no.style.transform = `scale(${Math.max(noSize, 0)})`;
+
+            no.style.left = (Math.random() * 200 - 100) + "px";
+            no.style.top = (Math.random() * 150 - 75) + "px";
+
+            if (noSize <= 0.15) {
+                no.style.display = "none";
+            }
+        });
+
+        // ==========================
+        // یادداشت آخر
+        // ==========================
+        noteInput.addEventListener("input", function () {
+            sendNote.disabled = noteInput.value.trim().length === 0;
+        });
+
+        sendNote.addEventListener("click", function () {
+            const noteText = noteInput.value.trim();
+            if (!noteText) return;
+
+            sendNote.disabled = true;
+            status.textContent = "";
+
+            notePage.classList.add("hidden");
+            heartAnimation.style.display = "block";
+
+            setTimeout(function () {
+                heartAnimation.style.display = "none";
+                scorePage.classList.remove("hidden");
+            }, 1500);
+        });
+
+        // قلب هنگام لمس موبایل
+        document.addEventListener("touchstart", function (e) {
+            const h = document.createElement("div");
+            h.className = "heart";
+            h.textContent = "💗";
+            h.style.left = e.touches[0].clientX + "px";
+            h.style.top = e.touches[0].clientY + "px";
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1500);
+        }, { passive: true });
+    </script>
+</body>
+
+</html>
